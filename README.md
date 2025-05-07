@@ -4,8 +4,7 @@
 
 Many community centers and restaurants that offer ceremonial spaces face significant challenges in managing reservations.  
 The traditional, often manual methods of handling bookings are prone to errors such as:
-
-- Double bookings  
+  
 - Miscommunications  
 - Scheduling conflicts  
 
@@ -55,7 +54,7 @@ A **web-based reservation system** is proposed with the following key features:
 - Bootstrap  
 - Composer  
 - DomPDF (for PDF invoices)  
-- SSLCOMMERZ or Stripe (for payments)
+
 
 ---
 
