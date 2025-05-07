@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Manager Dashboard</title>
+    <!-- Animate.css for animations -->
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"
+    />
+    <!-- Font Awesome for icons -->
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"
+    />
+    <link rel="stylesheet" href="dashboard.css" />
+  </head>
+  <body>
+    <!-- Side Navigation -->
+    <aside class="sidebar animate__animated animate__fadeInLeft">
+      <div class="sidebar-brand">
+        <h2><i class="fas fa-user-tie"></i> Manager</h2>
+      </div>
+      <ul class="sidebar-menu">
+        <li class="active">
+          <a href="#">
+            <i class="fas fa-tachometer-alt"></i>
+            <span>Dashboard</span>
+          </a>
+        </li>
+        <li>
+          <a href="#">
+            <i class="fas fa-calendar-check"></i>
+            <span>Reservations</span>
+          </a>
+        </li>
+        <li>
+          <a href="#">
+            <i class="fas fa-clock"></i>
+            <span>Timewise Schedule</span>
+          </a>
+        </li>
+        <li>
+          <a href="#">
+            <i class="fas fa-chart-line"></i>
+            <span>Reports</span>
+          </a>
+        </li>
+        <li>
+          <a href="#">
+            <i class="fas fa-cog"></i>
+            <span>Settings</span>
+          </a>
+        </li>
+      </ul>
+    </aside>
+
+    <!-- Main Content -->
+    <div class="main-content animate__animated animate__fadeInUp">
+      <!-- Top Navigation Bar -->
+      <header>
+        <div class="search-wrapper">
+          <i class="fas fa-search"></i>
+          <input type="search" placeholder="Search..." />
+        </div>
+        <div class="user-wrapper">
+          <i class="fas fa-bell"></i>
+          <div class="manager-profile">
+            <img src="images/manager.jpg" alt="Manager" />
+            <div>
+              <h4>Manager Name</h4>
+              <small>Venue Manager</small>
+            </div>
+          </div>
+        </div>
+      </header>
+
+      <!-- Dashboard Cards -->
+      <section class="cards">
+        <div class="card-single animate__animated animate__zoomIn">
+          <div>
+            <h1>25</h1>
+            <span>Today's Bookings</span>
+          </div>
+          <div>
+            <i class="fas fa-calendar-check"></i>
+          </div>
+        </div>
+
+        <div class="card-single animate__animated animate__zoomIn">
+          <div>
+            <h1>10</h1>
+            <span>Upcoming Events</span>
+          </div>
+          <div>
+            <i class="fas fa-hourglass-half"></i>
+          </div>
+        </div>
+
+        <div class="card-single animate__animated animate__zoomIn">
+          <div>
+            <h1>5</h1>
+            <span>Cancellations</span>
+          </div>
+          <div>
+            <i class="fas fa-times-circle"></i>
+          </div>
+        </div>
+      </section>
+
+      <!-- Manager Charts -->
+      <section class="charts">
+        <div class="chart-card animate__animated animate__fadeIn">
+          <h3>Monthly Booking Trend</h3>
+          <canvas id="managerBookingsChart"></canvas>
+        </div>
+      </section>
+
+      <!-- Timewise Schedule Section -->
+      <section class="timewise-schedule animate__animated animate__fadeIn">
+        <h3>Reservations (Timewise)</h3>
+        <table>
+          <thead>
+            <tr>
+              <th>Time Slot</th>
+              <th>Booking ID</th>
+              <th>Client Name</th>
+              <th>Status</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>10:00 AM - 12:00 PM</td>
+              <td>#2345</td>
+              <td>John Doe</td>
+              <td><span class="status status-success">Confirmed</span></td>
+            </tr>
+            <tr>
+              <td>12:00 PM - 02:00 PM</td>
+              <td>#2346</td>
+              <td>Sarah Lee</td>
+              <td><span class="status status-pending">Pending</span></td>
+            </tr>
+            <tr>
+              <td>02:00 PM - 04:00 PM</td>
+              <td>#2347</td>
+              <td>Michael Green</td>
+              <td><span class="status status-cancelled">Cancelled</span></td>
+            </tr>
+            <tr>
+              <td>04:00 PM - 06:00 PM</td>
+              <td>#2348</td>
+              <td>Linda Scott</td>
+              <td><span class="status status-success">Confirmed</span></td>
+            </tr>
+          </tbody>
+        </table>
+      </section>
+    </div>
+
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <!-- Dashboard JS -->
+    <script src="dashboard.js"></script>
+  </body>
+</html>

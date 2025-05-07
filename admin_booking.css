@@ -1,0 +1,53 @@
+/* Page Title */
+.page-title {
+  font-size: 2rem;
+  margin-bottom: 1rem;
+  color: #333;
+}
+
+/* Bookings Table Section */
+.bookings-table-section {
+  margin-top: 1.5rem;
+}
+
+.bookings-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.bookings-table thead {
+  background: #3807a9;
+  color: #fff;
+}
+
+.bookings-table th,
+.bookings-table td {
+  padding: 0.75rem;
+  border: 1px solid #ddd;
+  text-align: left;
+}
+
+.bookings-table tbody tr:hover {
+  background: #f5f5f5;
+}
+
+/* Action Buttons for Bookings */
+.btn-view,
+.btn-update,
+.btn-delete {
+  background: none;
+  border: none;
+  cursor: pointer;
+  margin-right: 0.5rem;
+  font-size: 1rem;
+}
+
+.btn-view {
+  color: #007bff;
+}
+.btn-update {
+  color: #ffc107;
+}
+.btn-delete {
+  color: #dc3545;
+}
