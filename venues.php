@@ -60,7 +60,7 @@ $conn->close();
         <div class="venue-info">
           <h3 class="venue-name"><?= htmlspecialchars($venue['name']) ?></h3>
           <p><strong>Type:</strong> <?= htmlspecialchars($venue['type']) ?></p>
-          <p><strong>Location:</strong> <?= htmlspecialchars($venue['city']) ?>, <?= htmlspecialchars($venue['area']) ?></p>
+          <p><strong>Location:</strong> <?= htmlspecialchars($venue['area']) ?> , <?= htmlspecialchars($venue['city']) ?></p>
           <p><strong>Capacity:</strong> <?= htmlspecialchars($venue['capacity']) ?> Guests</p>
           <!-- Features Section -->
           <div class="features-section">

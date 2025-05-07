@@ -1,5 +1,6 @@
 <?php
 include "db.php";
+include 'navbar.php';
 
 $venue_id = $_GET['venue_id'] ?? 1;
 if (!$venue_id) {
@@ -87,18 +88,6 @@ $conn->close();
 </head>
 
 <body>
-  <header class="navbar">
-    <div class="logo" href="index.php">CEREMO</div>
-    <ul class="nav-links">
-      <li><a href="index.php">Home</a></li>
-      <li><a href="#about">About</a></li>
-      <li><a href="venues.php">Venues</a></li>
-      <li><a href="#contact">Contact</a></li>
-      <li><button class="btn-login" onclick="window.location.href='login.html'">Login</button></li>
-    </ul>
-    <div class="hamburger"><i class="fas fa-bars"></i></div>
-  </header>
-
   <section class="venue-hero">
     <div class="hero-bg" style="background-image: url('<?= $image_path ?>');"></div>
     <div class="hero-content">

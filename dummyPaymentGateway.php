@@ -1,4 +1,5 @@
 <?php
+include 'navbar.php';
 session_start();
 $total = $_POST['total'] ?? 0;
 $advance = $_POST['advance'] ?? 0;
@@ -11,7 +12,7 @@ $advance = $_POST['advance'] ?? 0;
   <meta charset="UTF-8">
   <title>Payment Gateway</title>
   <style>
-    body {
+    .payment-wrapper {
       font-family: 'Poppins', sans-serif;
       background: #f9f9fb;
       display: flex;
@@ -139,61 +140,65 @@ $advance = $_POST['advance'] ?? 0;
 </head>
 
 <body>
-  <div class="gateway-wrapper">
-    <div class="summary-section">
-      <h2>Payment Summary</h2>
-      <p>Total Bill: ৳<?= number_format($total) ?></p>
-      <p>Advance (40%):</p>
-      <p class="amount">৳<?= number_format($advance) ?></p>
-      <div class="note">Pay now to confirm your booking.</div>
-    </div>
-
-    <div class="payment-section">
-      <h3>Select Payment Method</h3>
-
-      <div class="tabs">
-        <div class="tab active" data-tab="card">💳 Card</div>
-        <div class="tab" data-tab="wallet">📱 Mobile Wallet</div>
-        <div class="tab" data-tab="bank">🏦 Net Banking</div>
+  <div class="payment-wrapper">
+    <div class="gateway-wrapper">
+      <div class="summary-section">
+        <h2>Payment Summary</h2>
+        <p>Total Bill: ৳<?= number_format($total) ?></p>
+        <p>Advance (40%):</p>
+        <p class="amount">৳<?= number_format($advance) ?></p>
+        <div class="note">Pay now to confirm your booking.</div>
       </div>
 
-      <!-- Card Form -->
-      <form class="payment-form active" id="card" action="paymentSuccess.php" method="POST">
-        <input type="hidden" name="paid" value="<?= $advance ?>">
-        <input type="text" name="card_number" class="card-input" placeholder="Card Number" required>
-        <input type="text" name="card_name" class="card-input" placeholder="Cardholder Name" required>
-        <input type="text" name="expiry" class="card-input" placeholder="MM/YY" required>
-        <input type="text" name="cvv" class="card-input" placeholder="CVV" required>
-        <button type="submit" class="btn">Pay ৳<?= number_format($advance) ?> Now</button>
-      </form>
+      <div class="payment-section">
+        <h3>Select Payment Method</h3>
 
-      <!-- Mobile Wallet -->
-      <form class="payment-form" id="wallet" action="paymentSuccess.php" method="POST">
-        <input type="hidden" name="paid" value="<?= $advance ?>">
-        <select class="card-input" name="wallet_type" required>
-          <option value="">Select Wallet</option>
-          <option value="bkash">bKash</option>
-          <option value="nagad">Nagad</option>
-          <option value="rocket">Rocket</option>
-        </select>
-        <input type="text" name="wallet_number" class="card-input" placeholder="Wallet Number" required>
-        <button type="submit" class="btn">Pay ৳<?= number_format($advance) ?> via Wallet</button>
-      </form>
+        <div class="tabs">
+          <div class="tab active" data-tab="card">💳 Card</div>
+          <div class="tab" data-tab="wallet">📱 Mobile Wallet</div>
+          <div class="tab" data-tab="bank">🏦 Net Banking</div>
+        </div>
 
-      <!-- Bank -->
-      <form class="payment-form" id="bank">
-        <p style="color: #999;">Net Banking feature is coming soon!</p>
-      </form>
+        <!-- Card Form -->
+        <form class="payment-form active" id="card" action="paymentSuccess.php" method="POST">
+          <input type="hidden" name="paid" value="<?= $advance ?>">
+          <input type="text" name="card_number" class="card-input" placeholder="Card Number" required>
+          <input type="text" name="card_name" class="card-input" placeholder="Cardholder Name" required>
+          <input type="text" name="expiry" class="card-input" placeholder="MM/YY" required>
+          <input type="text" name="cvv" class="card-input" placeholder="CVV" required>
+          <button type="submit" class="btn">Pay ৳<?= number_format($advance) ?> Now</button>
+        </form>
 
-      <div class="logo-row">
-        <img src="images/payment_methods/visainc.png">
-        <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/a/a4/Mastercard_2019_logo.svg/120px-Mastercard_2019_logo.svg.png">
-        <img src="images/payment_methods/BKash-Logo.wine.svg">
-        <img src="images/payment_methods/Nagad-Logo.wine.svg">
-        <img src="images/payment_methods/rocket.jpeg">
+        <!-- Mobile Wallet -->
+        <form class="payment-form" id="wallet" action="paymentSuccess.php" method="POST">
+          <input type="hidden" name="paid" value="<?= $advance ?>">
+          <select class="card-input" name="wallet_type" required>
+            <option value="">Select Wallet</option>
+            <option value="bkash">bKash</option>
+            <option value="nagad">Nagad</option>
+            <option value="rocket">Rocket</option>
+          </select>
+          <input type="text" name="wallet_number" class="card-input" placeholder="Wallet Number" required>
+          <button type="submit" class="btn">Pay ৳<?= number_format($advance) ?> via Wallet</button>
+        </form>
+
+        <!-- Bank -->
+        <form class="payment-form" id="bank">
+          <p style="color: #999;">Net Banking feature is coming soon!</p>
+        </form>
+
+        <div class="logo-row">
+          <img src="images/payment_methods/visainc.png">
+          <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/a/a4/Mastercard_2019_logo.svg/120px-Mastercard_2019_logo.svg.png">
+          <img src="images/payment_methods/BKash-Logo.wine.svg">
+          <img src="images/payment_methods/Nagad-Logo.wine.svg">
+          <img src="images/payment_methods/rocket.jpeg">
+        </div>
       </div>
     </div>
+
   </div>
+
 
   <script>
     document.querySelectorAll('.tab').forEach(tab => {

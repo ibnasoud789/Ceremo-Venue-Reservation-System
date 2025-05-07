@@ -1,6 +1,7 @@
 <?php
 session_start();
 include "db.php";
+include 'navbar.php';
 
 // Initialize
 $success = false;
@@ -102,13 +103,6 @@ if (!$success) {
   <meta charset="UTF-8">
   <title>Booking Confirmation</title>
   <style>
-    body {
-      font-family: "Poppins", sans-serif;
-      background: linear-gradient(135deg, #f3f4f9, #e8eaf6);
-      padding: 50px 20px;
-      margin: 0;
-    }
-
     .confirmation-wrapper {
       max-width: 1200px;
       margin: auto;

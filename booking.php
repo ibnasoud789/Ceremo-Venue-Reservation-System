@@ -1,5 +1,6 @@
 <?php
 include "db.php";
+include 'navbar.php';
 session_start();
 
 $venue_id = $_GET['venue_id'] ?? $_POST['venue_id'] ?? null;

@@ -1,5 +1,6 @@
 <?php
 include "db.php";
+include 'navbar.php';
 
 // Fetch filters
 $type = $_GET['type'] ?? '';
@@ -98,9 +99,10 @@ $conn->close();
     }
 
     body {
-      font-family: 'Inter', sans-serif;
-      background: #f8fafc;
+      font-family: "Poppins", sans-serif;
+      background-color: #f1f1f1;
       color: #333;
+      overflow-x: hidden;
       scroll-behavior: smooth;
     }
 
@@ -366,10 +368,10 @@ $conn->close();
           </div>
           <div class="venue-details">
             <h3><?= htmlspecialchars($venue['name']) ?></h3>
-            <p><?= htmlspecialchars($venue['city']) ?> • <?= htmlspecialchars($venue['area']) ?></p>
+            <p><?= htmlspecialchars($venue['area']) ?> • <?= htmlspecialchars($venue['city']) ?></p>
             <div class="tags">
               <span class="tag"><?= htmlspecialchars($venue['type']) ?></span>
-              <span class="tag">Seats <?= htmlspecialchars($venue['capacity']) ?></span>
+              <span class="tag">Capacity <?= htmlspecialchars($venue['capacity']) ?></span>
             </div>
             <p class="desc"><?= htmlspecialchars($venue['description']) ?></p>
             <div class="features">

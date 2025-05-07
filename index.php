@@ -1,3 +1,7 @@
+<?php
+include 'navbar.php';
+?>
+
 <!DOCTYPE html>
 <html lang="en">
 
@@ -393,18 +397,6 @@
 </head>
 
 <body>
-  <nav class="navbar">
-    <div class="logo">CEREMO</div>
-    <ul class="nav-links">
-      <li><a href="#home">Home</a></li>
-      <li><a href="#about">About</a></li>
-      <li><a href="venues.php">Venues</a></li>
-      <li><a href="booking.html">Book Now</a></li>
-      <li><a href="#contact">Contact</a></li>
-      <li><button class="btn-login" onclick="window.location.href='login.html'">Login</button></li>
-    </ul>
-  </nav>
-
   <!-- Hero (unchanged) -->
   <section id="home" class="hero">
     <div class="overlay"></div>
