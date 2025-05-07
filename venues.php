@@ -1,5 +1,7 @@
 <?php
-include "db.php"; // Include the database connection file
+include "db.php";
+include 'navbar.php';
+
 
 // Fetch venues with features
 $stmt = $conn->prepare("SELECT v.id, v.name, v.type, v.city, v.area, v.capacity, v.image, v.description, GROUP_CONCAT(f.name) AS features

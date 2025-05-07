@@ -483,3 +483,72 @@ body {
   padding: 1rem 2rem;
   font-size: 0.9rem;
 }
+
+.venue-contact-address {
+  background: #f9fafb;
+  padding: 3rem 2rem;
+}
+
+.section-wrapper {
+  display: flex;
+  justify-content: space-between;
+  gap: 2rem;
+  flex-wrap: wrap;
+}
+
+.section-block {
+  display: flex;
+  align-items: flex-start;
+  flex: 1 1 45%;
+  gap: 1.5rem;
+}
+
+.side-title {
+  writing-mode: vertical-lr;
+  text-orientation: upright;
+  font-size: 1.3rem;
+  font-weight: 600;
+  color: #0f172a;
+  border-left: 3px solid #ff4d6d;
+  padding-left: 0.75rem;
+}
+
+.info-card {
+  background: #fff;
+  padding: 1.5rem;
+  border-radius: 12px;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.05);
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+  gap: 1.5rem;
+  flex: 1;
+}
+
+.info-item {
+  text-align: center;
+}
+
+.info-item i {
+  font-size: 2rem;
+  color: #ff4d6d;
+  margin-bottom: 0.5rem;
+}
+
+.info-item h3 {
+  font-size: 1rem;
+  font-weight: 600;
+  margin-bottom: 0.25rem;
+  color: #1e293b;
+}
+
+.info-item p {
+  font-size: 0.95rem;
+  color: #4b5563;
+}
+.navbar {
+  position: sticky;
+  top: 0;
+  z-index: 999;
+  background-color: white;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+}

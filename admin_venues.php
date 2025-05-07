@@ -414,6 +414,15 @@ $conn->close();  // Close the connection
           <input type="number" id="venueCapacity" name="venueCapacity" required />
         </div>
         <div class="form-group">
+          <label for="timeSlot1">Time Slot 1</label>
+          <input type="text" id="timeSlot1" name="timeSlots[]" placeholder="14:00:00" required />
+        </div>
+        <div class="form-group">
+          <label for="timeSlot2">Time Slot 2</label>
+          <input type="text" id="timeSlot2" name="timeSlots[]" placeholder="18:00:00" required />
+        </div>
+
+        <div class="form-group">
           <label for="venueFeatures">Select Features</label><br>
           <!-- Hard-Coded Features -->
           <label>

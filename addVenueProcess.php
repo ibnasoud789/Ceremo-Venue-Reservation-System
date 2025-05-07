@@ -20,6 +20,17 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
   $stmt->execute();
   $venue_id = $conn->insert_id; // Get the last inserted venue ID
 
+  // Handle time slot inserts
+  if (isset($_POST['timeSlots'])) {
+    foreach ($_POST['timeSlots'] as $slot) {
+      if (!empty(trim($slot))) {
+        $stmt = $conn->prepare("INSERT INTO venue_slots (venue_id, slot_time) VALUES (?, ?)");
+        $stmt->bind_param("is", $venue_id, $slot);
+        $stmt->execute();
+      }
+    }
+  }
+
 
   // Handle food package inserts
   if (isset($_POST['packages'])) {

@@ -29,6 +29,17 @@ while ($f = $fres->fetch_assoc()) {
   $features[] = $f['name'];
 }
 
+// Fetch time slots
+$slots = [];
+$sstmt = $conn->prepare("SELECT slot_time FROM venue_slots WHERE venue_id = ?");
+$sstmt->bind_param("i", $venue_id);
+$sstmt->execute();
+$sres = $sstmt->get_result();
+while ($slot = $sres->fetch_assoc()) {
+  $slots[] = $slot['slot_time'];
+}
+
+
 // Fetch food packages
 $food_packages = [];
 $pstmt = $conn->prepare("SELECT * FROM food_packages WHERE venue_id = ?");
@@ -77,7 +88,7 @@ $conn->close();
 
 <body>
   <header class="navbar">
-    <div class="logo">CEREMO</div>
+    <div class="logo" href="index.php">CEREMO</div>
     <ul class="nav-links">
       <li><a href="index.php">Home</a></li>
       <li><a href="#about">About</a></li>
@@ -98,9 +109,13 @@ $conn->close();
 
   <section class="venue-details-section">
     <div class="venue-info animate__animated animate__fadeInLeft">
+      <div class="info-item"><i class="fas fa-chair"></i>
+        <h3>Batch</h3>
+        <p><?= htmlspecialchars($venue['Batch']) ?> </p>
+      </div>
       <div class="info-item"><i class="fas fa-users"></i>
-        <h3>Sitting Capacity</h3>
-        <p><?= htmlspecialchars($venue['capacity']) ?> Guests</p>
+        <h3>Guest</h3>
+        <p><?= htmlspecialchars($venue['capacity']) ?> </p>
       </div>
       <div class="info-item"><i class="fas fa-money-bill-wave"></i>
         <h3>Venue Type</h3>
@@ -108,12 +123,24 @@ $conn->close();
       </div>
       <div class="info-item"><i class="fas fa-clock"></i>
         <h3>Timings</h3>
-        <p>10 AM - 10 PM</p>
+        <?php if (!empty($slots)): ?>
+          <?php foreach ($slots as $time): ?>
+            <p><?= htmlspecialchars($time) ?></p>
+          <?php endforeach; ?>
+        <?php else: ?>
+          <p>Not Available</p>
+        <?php endif; ?>
       </div>
+
       <div class="info-item"><i class="fas fa-map-marker-alt"></i>
         <h3>Location</h3>
         <p><?= htmlspecialchars($venue['area']) ?>, <?= htmlspecialchars($venue['city']) ?></p>
       </div>
+      <div class="info-item"><i class="fas fa-ruler-combined"></i>
+        <h3>Space</h3>
+        <p><?= htmlspecialchars($venue['space']) ?> sq m</p>
+      </div>
+
     </div>
     <div class="venue-description animate__animated animate__fadeInRight">
       <h2>About The Venue</h2>
@@ -175,9 +202,52 @@ $conn->close();
       </div>
     <?php endforeach; ?>
   </section>
+  <section class="venue-contact-address animate__animated animate__fadeInUp">
+    <div class="section-wrapper">
+      <!-- Address Section -->
+      <div class="section-block">
+        <div class="side-title">ADDRESS</div>
+        <div class="info-card">
+          <div class="info-item"><i class="fas fa-map"></i>
+            <h3>Holding Number</h3>
+            <p><?= htmlspecialchars($venue['HoldingNo']) ?></p>
+          </div>
+          <div class="info-item"><i class="fas fa-street-view"></i>
+            <h3>Area</h3>
+            <p><?= htmlspecialchars($venue['area']) ?></p>
+          </div>
+          <div class="info-item"><i class="fas fa-city"></i>
+            <h3>City</h3>
+            <p><?= htmlspecialchars($venue['city']) ?></p>
+          </div>
+          <div class="info-item"><i class="fas fa-mail-bulk"></i>
+            <h3>ZIP Code</h3>
+            <p><?= htmlspecialchars($venue['ZIP']) ?></p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Contact Section -->
+      <div class="section-block">
+        <div class="side-title">CONTACT</div>
+        <div class="info-card">
+          <div class="info-item"><i class="fas fa-phone-alt"></i>
+            <h3>Contact Number</h3>
+            <p><?= htmlspecialchars($venue['ContactNumber']) ?></p>
+          </div>
+          <div class="info-item"><i class="fas fa-envelope"></i>
+            <h3>Email</h3>
+            <p><?= htmlspecialchars($venue['Email']) ?></p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+
 
   <footer class="site-footer">
-    <p>&copy; 2025 EventVenue. All rights reserved.</p>
+    <p>&copy; 2025 Ceremo. All rights reserved.</p>
   </footer>
 
   <script src="venuedetail.js"></script>
