@@ -1,5 +1,6 @@
 <?php
 include "db.php";
+include 'navbar.php';
 $stmt = $conn->query("SELECT id, name FROM add_on_categories");
 $categories = $stmt->fetch_all(MYSQLI_ASSOC);
 
@@ -24,19 +25,11 @@ $images = [
   <meta charset="UTF-8">
   <title>Explore Add-On Services</title>
   <style>
-    body {
-      margin: 0;
-      font-family: 'Poppins', sans-serif;
-      background: linear-gradient(to right, #0f2027, #203a43, #2c5364);
-      color: #fff;
-      padding: 50px 30px;
-    }
-
     h1 {
       text-align: center;
       font-size: 3.2rem;
       margin-bottom: 60px;
-      color: #ffffff;
+      color: royalblue;
       text-shadow: 1px 1px 5px rgba(0, 0, 0, 0.3);
     }
 

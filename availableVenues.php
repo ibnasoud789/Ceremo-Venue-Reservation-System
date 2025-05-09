@@ -92,52 +92,45 @@ $conn->close();
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
   <style>
     /* Global */
+    /* Global Styles */
     * {
       margin: 0;
       padding: 0;
       box-sizing: border-box;
     }
 
-    body {
-      font-family: "Poppins", sans-serif;
-      background-color: #f1f1f1;
-      color: #333;
-      overflow-x: hidden;
-      scroll-behavior: smooth;
-    }
+
 
     /* Hero Section */
     .hero {
-      background: url('images/hero-bg.jpg') center/cover no-repeat;
-      height: 320px;
-      position: relative;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-    }
-
-    .hero-overlay {
-      background: #1e293b;
-      padding: 40px;
-      border-radius: 16px;
+      background: linear-gradient(135deg, #2d6a4f, #00aaff);
+      color: #fff;
       text-align: center;
-      color: white;
+      padding: 120px 30px;
+      position: relative;
+      overflow: hidden;
+      border-bottom-left-radius: 60% 25%;
+      border-bottom-right-radius: 60% 25%;
     }
 
-    .hero-overlay h1 {
-      font-size: 2.8rem;
-      margin-bottom: 12px;
-      letter-spacing: 1.2px;
+    .hero h1 {
+      font-size: 3.5rem;
+      font-weight: 600;
+      margin-bottom: 15px;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
     }
 
-    .hero-overlay p {
-      font-size: 1.2rem;
+    .hero p {
+      font-size: 1.25rem;
       font-weight: 300;
+      opacity: 0.8;
     }
 
+    /* Wave Divider */
     .wave-divider {
       position: absolute;
-      bottom: -1px;
+      bottom: -40px;
       left: 0;
       width: 100%;
       overflow: hidden;
@@ -147,20 +140,20 @@ $conn->close();
     .wave-divider svg {
       display: block;
       width: 100%;
-      height: 120px;
+      height: 150px;
+      filter: drop-shadow(0 4px 6px rgba(0, 0, 0, 0.1));
     }
-
 
     /* Venue Listings */
     .venue-listings {
-      padding: 60px 30px;
-      background: linear-gradient(to bottom, #f8fafc, #e0f2fe);
+      padding: 80px 20px;
+      background-color: #ffffff;
     }
 
     .venue-container {
       display: grid;
       grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
-      gap: 32px;
+      gap: 30px;
       max-width: 1300px;
       margin: 0 auto;
       justify-items: center;
@@ -168,102 +161,84 @@ $conn->close();
 
     /* Venue Card */
     .venue-card {
-      position: relative;
-      background: rgba(255, 255, 255, 0.7);
-      border-radius: 18px;
+      background: #ffffff;
+      border-radius: 16px;
       overflow: hidden;
-      backdrop-filter: blur(14px);
-      box-shadow: 0 14px 40px rgba(0, 0, 0, 0.08);
+      box-shadow: 0 12px 30px rgba(0, 0, 0, 0.1);
       transition: transform 0.3s ease, box-shadow 0.3s ease;
       display: flex;
       flex-direction: column;
-      transform-style: preserve-3d;
-      animation: fadeInUp 0.8s ease forwards;
-      opacity: 0;
+      cursor: pointer;
     }
 
     .venue-card:hover {
-      transform: translateY(-6px) scale(1.02);
-      box-shadow: 0 24px 48px rgba(0, 0, 0, 0.15);
+      transform: translateY(-10px);
+      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2);
     }
 
-    @keyframes fadeInUp {
-      from {
-        transform: translateY(30px);
-        opacity: 0;
-      }
-
-      to {
-        transform: translateY(0);
-        opacity: 1;
-      }
-    }
-
-    /* Image Section */
     .venue-image img {
       width: 100%;
       height: 220px;
       object-fit: cover;
       transition: transform 0.4s ease;
-      filter: brightness(75%);
     }
 
     .venue-card:hover .venue-image img {
       transform: scale(1.05);
-      filter: brightness(85%);
     }
 
     /* Venue Details */
     .venue-details {
-      padding: 22px;
-      flex-grow: 1;
+      padding: 24px;
       display: flex;
       flex-direction: column;
+      justify-content: space-between;
     }
 
     .venue-details h3 {
-      font-size: 1.5rem;
+      font-size: 1.8rem;
       font-weight: 600;
-      margin-bottom: 8px;
-      color: #1e293b;
+      margin-bottom: 12px;
+      color: #2c3e50;
     }
 
     .venue-details p {
-      font-size: 0.92rem;
-      color: #6b7280;
-      margin-bottom: 10px;
+      font-size: 1rem;
+      color: #7f8c8d;
+      margin-bottom: 16px;
     }
 
     .desc {
       font-size: 0.95rem;
       color: #475569;
       margin: 12px 0;
+      opacity: 0.8;
     }
 
     /* Tags & Features */
     .tags .tag {
       background: #ecfeff;
       color: #06b6d4;
-      padding: 6px 12px;
+      padding: 8px 14px;
       border-radius: 50px;
       margin-right: 8px;
-      font-size: 0.8rem;
+      font-size: 0.9rem;
       font-weight: 600;
     }
 
     .features {
       display: flex;
       flex-wrap: wrap;
-      gap: 8px;
+      gap: 10px;
       margin: 12px 0;
     }
 
     .features span {
       background: #f3f4f6;
       color: #334155;
-      padding: 6px 12px;
+      padding: 8px 14px;
       border-radius: 6px;
-      font-size: 0.85rem;
+      font-size: 0.9rem;
     }
 
     /* Bottom Row */
@@ -271,14 +246,14 @@ $conn->close();
       display: flex;
       justify-content: space-between;
       align-items: center;
-      padding-top: 14px;
+      padding-top: 16px;
       margin-top: auto;
     }
 
     .price {
       color: #ef4444;
       font-weight: 700;
-      font-size: 1.1rem;
+      font-size: 1.2rem;
     }
 
     .btn-group {
@@ -288,8 +263,8 @@ $conn->close();
 
     .book-btn,
     .details-btn {
-      padding: 10px 20px;
-      font-size: 0.95rem;
+      padding: 12px 24px;
+      font-size: 1.05rem;
       font-weight: 600;
       border-radius: 8px;
       text-decoration: none;
@@ -309,8 +284,28 @@ $conn->close();
 
     .book-btn:hover,
     .details-btn:hover {
-      transform: translateY(-3px) scale(1.02);
+      transform: translateY(-3px) scale(1.05);
       box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+    }
+
+    /* Responsive Styles */
+    @media (max-width: 768px) {
+      .venue-listings {
+        padding: 60px 15px;
+      }
+
+      .hero h1 {
+        font-size: 2.5rem;
+      }
+
+      .venue-container {
+        grid-template-columns: 1fr 1fr;
+        gap: 20px;
+      }
+
+      .venue-card {
+        max-width: 90%;
+      }
     }
 
     /* Animations */
@@ -350,13 +345,7 @@ $conn->close();
       <h1>Find the Perfect <?php echo htmlspecialchars($type); ?></h1>
       <p><?php echo htmlspecialchars($area); ?>, <?php echo htmlspecialchars($city); ?></p>
     </div>
-    <div class="wave-divider">
-      <svg viewBox="0 0 1440 150" preserveAspectRatio="none">
-        <path d="M0,0 C480,150 960,0 1440,150L1440,320L0,320Z" fill="#f8fafc"></path>
-      </svg>
-    </div>
   </section>
-
 
   <!-- VENUE LISTINGS -->
   <section class="venue-listings">
@@ -381,7 +370,7 @@ $conn->close();
             </div>
             <div class="bottom-row">
               <span class="price">
-                <?= $venue['min_price'] ? 'Starting from ৳' . number_format($venue['min_price']) : 'Contact for Price' ?>
+                <?= $venue['min_price'] ? 'Starting from ৳' . number_format($venue['min_price']) . '/plate' : 'Contact for Price' ?>
               </span>
 
               <div class="btn-group">

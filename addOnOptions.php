@@ -1,6 +1,6 @@
 <?php
 include "db.php";
-
+include 'navbar.php';
 $category_id = $_GET['category_id'] ?? null;
 
 if (!$category_id) {

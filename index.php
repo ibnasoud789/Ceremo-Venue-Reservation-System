@@ -1,5 +1,19 @@
 <?php
+include 'db.php';
 include 'navbar.php';
+
+
+
+$stmt = $conn->prepare("  SELECT v.id, v.name, v.capacity, v.image, MIN(fp.promotional_price) AS min_promotional_price
+  FROM bookings b
+  JOIN venues v ON b.venue_id = v.id
+  JOIN food_packages fp ON v.id = fp.venue_id
+  WHERE b.status = 'Active'
+  GROUP BY v.id
+  ORDER BY COUNT(b.id) DESC
+  LIMIT 3");
+$stmt->execute();
+$popularVenues = $stmt->get_result()->fetch_all(MYSQLI_ASSOC);
 ?>
 
 <!DOCTYPE html>
@@ -170,6 +184,13 @@ include 'navbar.php';
       overflow: hidden;
       box-shadow: 0 15px 40px rgba(0, 0, 0, 0.08);
       transition: transform 0.3s ease;
+      padding: 1rem;
+      /* Add padding inside the card */
+      display: flex;
+      flex-direction: column;
+      /* Stack the elements vertically */
+      justify-content: space-between;
+      /* Space out the elements evenly */
     }
 
     .card:hover {
@@ -441,24 +462,16 @@ include 'navbar.php';
   <section class="venues">
     <h2>Popular Venues</h2>
     <div class="venue-cards">
-      <div class="card">
-        <img src="images/community_center.jpeg" alt="Venue 1" />
-        <h3>Community Center A</h3>
-        <p>Capacity: 200 | Price: $500/day</p>
-        <button class="btn-book">Details</button>
-      </div>
-      <div class="card">
-        <img src="images/restaurant.jpeg" alt="Venue 2" />
-        <h3>Restaurant B</h3>
-        <p>Capacity: 100 | Price: $300/day</p>
-        <button class="btn-book">Details</button>
-      </div>
-      <div class="card">
-        <img src="images/garden.jpeg" alt="Venue 3" />
-        <h3>Garden C</h3>
-        <p>Capacity: 150 | Price: $400/day</p>
-        <button class="btn-book">Details</button>
-      </div>
+      <?php foreach ($popularVenues as $venue): ?>
+        <div class="card">
+          <img src="images/venues/<?php echo htmlspecialchars($venue['image']); ?>" alt="<?php echo htmlspecialchars($venue['name']); ?>" />
+          <h3><?php echo htmlspecialchars($venue['name']); ?></h3>
+          <p class="capacity">Capacity: <?php echo htmlspecialchars($venue['capacity']); ?></p>
+          <p class="price">Starting from: BDT <?php echo number_format($venue['min_promotional_price'], 2); ?>/set</p>
+          <button class="btn-book" onclick="window.location.href='venuedetails.php?venue_id=<?= $venue['id'] ?>'">Details</button>
+        </div>
+      <?php endforeach; ?>
+
     </div>
   </section>
 
@@ -558,6 +571,63 @@ include 'navbar.php';
       <a href="#"><i class="fab fa-twitter"></i></a>
     </div>
   </footer>
+  <!-- Chatbot Icon -->
+  <div id="chatbot-icon" class="chatbot-icon">
+    <i class="fas fa-comments"></i>
+  </div>
+
+  <!-- Chatbot Window -->
+  <div id="chatbot-window" class="chatbot-window">
+    <div class="chat-header">
+      <h4>Chat with Us</h4>
+      <button id="close-chat" class="close-chat">&times;</button>
+    </div>
+    <div id="chat-content" class="chat-content">
+      <!-- Chat messages will appear here -->
+    </div>
+    <div class="chat-input">
+      <textarea id="chat-message" placeholder="Type your message..." rows="3"></textarea>
+      <button id="send-chat" onclick="sendMessage()">Send</button>
+    </div>
+  </div>
+  <script>
+    // Open/Close the chat window
+    document.getElementById('chatbot-icon').onclick = function() {
+      document.getElementById('chatbot-window').style.display = 'flex';
+    };
+
+    document.getElementById('close-chat').onclick = function() {
+      document.getElementById('chatbot-window').style.display = 'none';
+    };
+
+    // Function to send message to the backend (PHP) and display response
+    function sendMessage() {
+      var message = document.getElementById('chat-message').value;
+      if (message.trim() === '') return;
+
+      // Display the user's message in the chat window
+      var chatContent = document.getElementById('chat-content');
+      chatContent.innerHTML += `<div class="user-message">${message}</div>`;
+
+      // Clear the input field
+      document.getElementById('chat-message').value = '';
+
+      // Make an AJAX request to send the message to the PHP backend
+      var xhr = new XMLHttpRequest();
+      xhr.open('POST', 'chatbot.php', true); // Replace with your PHP backend path
+      xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
+      xhr.onreadystatechange = function() {
+        if (xhr.readyState === 4 && xhr.status === 200) {
+          var response = JSON.parse(xhr.responseText);
+          chatContent.innerHTML += `<div class="bot-message">${response.response}</div>`;
+          chatContent.scrollTop = chatContent.scrollHeight; // Scroll to the bottom
+        }
+      };
+      xhr.send('query=' + encodeURIComponent(message));
+    }
+  </script>
+
+
 </body>
 
 </html>

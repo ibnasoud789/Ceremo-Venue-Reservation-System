@@ -126,10 +126,10 @@ $conn->close();
         <h3 class="venue-name"><?= htmlspecialchars($venue['name']) ?></h3>
         <p><strong>Type:</strong> <?= htmlspecialchars($venue['type']) ?></p>
         <p><strong>Location:</strong><?= htmlspecialchars($venue['area']) ?>, <?= htmlspecialchars($venue['city']) ?></p>
-        <p><strong>Batch Capacity:</strong> <?= htmlspecialchars($venue['capacity']) ?></p>
+        <p><strong>Batch:</strong> <?= htmlspecialchars($venue['Batch']) ?></p>
         <div class="tags">
           <span class="tag"><?= htmlspecialchars($venue['type']) ?></span>
-          <span class="tag">Seats <?= htmlspecialchars($venue['capacity']) ?></span>
+          <span class="tag">Guests <?= htmlspecialchars($venue['capacity']) ?></span>
         </div>
         <p class="description"><?= htmlspecialchars($venue['description']) ?></p>
       </div>
