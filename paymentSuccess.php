@@ -1,7 +1,9 @@
 <?php
 session_start();
+include 'customerAuthorization.php';
 include "db.php";
 require 'vendor/autoload.php'; // for dompdf
+include 'navbar.php';
 
 use Dompdf\Dompdf;
 
@@ -12,7 +14,7 @@ if (!isset($_SESSION['pending_booking'])) {
 
 $data = $_SESSION['pending_booking'];
 $venue_id = $data['venue_id'];
-$customer_id = $_SESSION['customer_id'] ?? 1;
+$customer_id = $_SESSION['user_id'];
 $bookingDate = $data['bookingDate'];
 $timeSlot = $data['timeSlot'];
 $guests = $data['guests'];
@@ -51,13 +53,6 @@ unset($_SESSION['pending_booking']);
   <meta charset="UTF-8">
   <title>Payment Successful</title>
   <style>
-    body {
-      font-family: 'Poppins', sans-serif;
-      padding: 40px;
-      background: #f7f8fc;
-      text-align: center;
-    }
-
     .success-box {
       background: #fff;
       border-radius: 12px;

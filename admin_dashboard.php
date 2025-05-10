@@ -1,4 +1,5 @@
 <?php
+session_start();
 include "db.php"; // Include the database connection file
 
 // Fetch bookings today count

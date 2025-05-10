@@ -1,8 +1,12 @@
 <?php
 include "db.php";
-include 'navbar.php';
+include 'navbar.php';   // starts session and outputs navbar
 
-$venue_id = $_GET['venue_id'] ?? 1;
+// Determine login state
+$isLoggedIn = isset($_SESSION['user_type']) && $_SESSION['user_type'] === 'customer';
+
+// Get and validate venue_id
+$venue_id = isset($_GET['venue_id']) ? (int)$_GET['venue_id'] : 0;
 if (!$venue_id) {
   die("Invalid venue ID.");
 }
@@ -15,14 +19,16 @@ $venue = $stmt->get_result()->fetch_assoc();
 if (!$venue) {
   die("Venue not found.");
 }
-$background_image = $venue['image'];
-$image_path = "images/venues/" . htmlspecialchars($background_image);
+$image_path = "images/venues/" . htmlspecialchars($venue['image']);
 
 // Fetch features
 $features = [];
-$fstmt = $conn->prepare("SELECT f.name FROM features f
-                         JOIN venue_features vf ON f.id = vf.feature_id
-                         WHERE vf.venue_id = ?");
+$fstmt = $conn->prepare("
+  SELECT f.name
+  FROM features f
+  JOIN venue_features vf ON f.id = vf.feature_id
+  WHERE vf.venue_id = ?
+");
 $fstmt->bind_param("i", $venue_id);
 $fstmt->execute();
 $fres = $fstmt->get_result();
@@ -30,7 +36,7 @@ while ($f = $fres->fetch_assoc()) {
   $features[] = $f['name'];
 }
 
-// Fetch time slots
+// Fetch slots
 $slots = [];
 $sstmt = $conn->prepare("SELECT slot_time FROM venue_slots WHERE venue_id = ?");
 $sstmt->bind_param("i", $venue_id);
@@ -39,7 +45,6 @@ $sres = $sstmt->get_result();
 while ($slot = $sres->fetch_assoc()) {
   $slots[] = $slot['slot_time'];
 }
-
 
 // Fetch food packages
 $food_packages = [];
@@ -74,17 +79,85 @@ while ($r = $rres->fetch_assoc()) {
 
 $conn->close();
 ?>
-
 <!DOCTYPE html>
 <html lang="en">
 
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title><?= htmlspecialchars($venue['name']) ?> - Venue Details</title>
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css" />
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title><?= htmlspecialchars($venue['name']) ?> – Venue Details</title>
+  <link rel="stylesheet"
+    href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
+  <link rel="stylesheet"
+    href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css" />
   <link rel="stylesheet" href="venuedetail.css" />
+
+  <!-- Modal styles -->
+  <style>
+    :root {
+      --primary: #ff4d6d;
+      --bg-light: #f9fafb;
+      --text-dark: #1f2937;
+    }
+
+    .modal {
+      display: none;
+      position: fixed;
+      z-index: 1001;
+      left: 0;
+      top: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.5);
+      align-items: center;
+      justify-content: center;
+    }
+
+    .modal-content {
+      background: #fff;
+      padding: 2rem;
+      border-radius: 8px;
+      max-width: 400px;
+      width: 90%;
+      text-align: center;
+      position: relative;
+    }
+
+    .modal-content .close {
+      position: absolute;
+      top: 0.5rem;
+      right: 0.75rem;
+      font-size: 1.5rem;
+      color: var(--text-dark);
+      cursor: pointer;
+    }
+
+    .modal-content i.fa-user-lock {
+      display: block;
+      margin: 0 auto 1rem;
+      color: var(--primary);
+    }
+
+    .modal-content p {
+      margin: 1.5rem 0;
+      font-size: 1.1rem;
+      color: var(--text-dark);
+    }
+
+    .modal-content button {
+      background: var(--primary);
+      color: #fff;
+      border: none;
+      padding: 0.75rem 1.5rem;
+      border-radius: 0.5rem;
+      font-size: 1rem;
+      cursor: pointer;
+    }
+
+    .modal-content button:hover {
+      opacity: 0.9;
+    }
+  </style>
 </head>
 
 <body>
@@ -134,7 +207,10 @@ $conn->close();
     <div class="venue-description animate__animated animate__fadeInRight">
       <h2>About The Venue</h2>
       <p><?= htmlspecialchars($venue['description']) ?></p>
-      <button class="btn-book" onclick="window.location.href='booking.php?venue_id=<?= $venue_id ?>'">Book Now</button>
+      <a href="booking.php?venue_id=<?= $venue_id ?>"
+        class="btn-book">
+        Book Now
+      </a>
     </div>
   </section>
 
@@ -232,6 +308,18 @@ $conn->close();
       </div>
     </div>
   </section>
+  <!-- Modal Markup -->
+  <div id="loginModal" class="modal">
+    <div class="modal-content">
+      <span class="close" id="closeModal">&times;</span>
+      <i class="fas fa-user-lock fa-3x"></i>
+      <p>You need to be logged in to proceed.</p>
+      <button id="modalLoginBtn">
+        <i class="fas fa-sign-in-alt" style="margin-right:.5rem;"></i>
+        Login
+      </button>
+    </div>
+  </div>
 
 
 
@@ -240,6 +328,37 @@ $conn->close();
   </footer>
 
   <script src="venuedetail.js"></script>
+  <script>
+    // pass PHP flag to JS
+    const isLoggedIn = <?= $isLoggedIn ? 'true' : 'false' ?>;
+
+    // modal elements
+    const modal = document.getElementById('loginModal');
+    const closeModal = document.getElementById('closeModal');
+    const loginBtn = document.getElementById('modalLoginBtn');
+
+    // intercept Book Now
+    document.querySelectorAll('.btn-book').forEach(btn => {
+      btn.addEventListener('click', e => {
+        if (!isLoggedIn) {
+          e.preventDefault();
+          modal.style.display = 'flex';
+        }
+      });
+    });
+
+    // close modal
+    closeModal.addEventListener('click', () => modal.style.display = 'none');
+    window.addEventListener('click', e => {
+      if (e.target === modal) modal.style.display = 'none';
+    });
+
+    // Login redirect preserving page+query
+    loginBtn.addEventListener('click', () => {
+      const current = window.location.pathname + window.location.search;
+      window.location.href = 'login.php?redirect=' + encodeURIComponent(current);
+    });
+  </script>
 </body>
 
 </html>

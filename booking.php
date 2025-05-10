@@ -1,7 +1,7 @@
 <?php
 include "db.php";
 include 'navbar.php';
-session_start();
+include 'customerAuthorization.php';
 
 $venue_id = $_GET['venue_id'] ?? $_POST['venue_id'] ?? null;
 $bookingDate = $_POST['bookingDate'] ?? null;

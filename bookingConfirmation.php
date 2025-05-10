@@ -1,5 +1,6 @@
 <?php
 session_start();
+include 'customerAuthorization.php';
 include "db.php";
 include 'navbar.php';
 

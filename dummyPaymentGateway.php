@@ -1,6 +1,7 @@
 <?php
+include 'customerAuthorization.php';
 include 'navbar.php';
-session_start();
+
 $total = $_POST['total'] ?? 0;
 $advance = $_POST['advance'] ?? 0;
 ?>
