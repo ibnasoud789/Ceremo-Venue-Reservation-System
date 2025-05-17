@@ -6,7 +6,7 @@ $username = "root";
 
 $password = "";
 
-$dbname = "ceremo";
+$dbname = "ceremo2";
 
 $conn = new mysqli($servername, $username, $password, $dbname, 4306);
 

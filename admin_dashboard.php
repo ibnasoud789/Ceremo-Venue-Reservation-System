@@ -106,6 +106,12 @@ $conn->close();  // Close the connection
           <span>Settings</span>
         </a>
       </li>
+      <li>
+        <a href="logout.php" class="logout-btn">
+          <i class="fas fa-sign-out-alt"></i>
+          <span>Logout</span>
+        </a>
+      </li>
     </ul>
   </aside>
 

@@ -390,8 +390,13 @@ $conn->close();  // Close the connection
         <!-- Venue Details -->
         <div class="form-group">
           <label for="venueName">Venue Name</label>
-          <input type="text" id="venueName" name="venueName" required />
+          <input type="text" id="venueName" name="venueName" placeholder="Enter venue name" required />
         </div>
+        <div class="form-group">
+          <label for="password">Password</label>
+          <input type="text" id="password" name="password" placeholder="Enter your password" required />
+        </div>
+
         <div class="form-group">
           <label for="venueType">Venue Type</label>
           <select id="venueType" name="venueType" required>
@@ -402,29 +407,58 @@ $conn->close();  // Close the connection
           </select>
         </div>
         <div class="form-group">
-          <label for="venueArea">Area</label>
-          <input type="text" id="venueArea" name="venueArea" required />
+          <label for="venueholding">Holding</label>
+          <input type="number" id="venueholding" name="venueholding" placeholder="Enter holding number" required />
         </div>
+        <div class="form-group">
+          <label for="venueArea">Area</label>
+          <input type="text" id="venueArea" name="venueArea" placeholder="Enter area" required />
+        </div>
+
         <div class="form-group">
           <label for="venueCity">City</label>
-          <input type="text" id="venueCity" name="venueCity" required />
+          <input type="text" id="venueCity" name="venueCity" placeholder="Enter city" required />
         </div>
         <div class="form-group">
-          <label for="venueCapacity">Capacity</label>
-          <input type="number" id="venueCapacity" name="venueCapacity" required />
+          <label for="venuezip">Zip</label>
+          <input type="number" id="venuezip" name="venuezip" placeholder="Enter Zip" required />
         </div>
+
+        <div class="form-group">
+          <label for="venueCapacity">Capacity</label>
+          <input type="number" id="venueCapacity" name="venueCapacity" placeholder="Enter capacity" required />
+        </div>
+        <div class="form-group">
+          <label for="venueBatch">Batch</label>
+          <input type="number" id="venueBatch" name="venueBatch" placeholder="Enter batch" required />
+        </div>
+        <div class="form-group">
+          <label for="venueSize">Space (sq m)</label>
+          <input type="number" id="venueSize" name="venueSize" placeholder="Enter size of your venue" required />
+        </div>
+        <div class="form-group">
+          <label for="venuecontact">Contact No.</label>
+          <input type="number" id="venuecontact" name="venuecontact" placeholder="Enter your contact number" required />
+        </div>
+        <div class="form-group">
+          <label for="venueemail">Email</label>
+          <input type="text" id="venueemail" name="venueemail" placeholder="Enter your email" required />
+        </div>
+
+        <!-- Time Slots -->
         <div class="form-group">
           <label for="timeSlot1">Time Slot 1</label>
           <input type="text" id="timeSlot1" name="timeSlots[]" placeholder="14:00:00" required />
         </div>
+
         <div class="form-group">
           <label for="timeSlot2">Time Slot 2</label>
           <input type="text" id="timeSlot2" name="timeSlots[]" placeholder="18:00:00" required />
         </div>
 
+        <!-- Features -->
         <div class="form-group">
           <label for="venueFeatures">Select Features</label><br>
-          <!-- Hard-Coded Features -->
           <label>
             <input type="checkbox" name="features[]" value="1" /> WiFi
           </label><br>
@@ -457,47 +491,51 @@ $conn->close();  // Close the connection
           </label><br>
         </div>
 
-
+        <!-- Venue Description -->
         <div class="form-group">
-          <label for="venueDescription">Description</label>
-          <textarea id="venueDescription" name="venueDescription" rows="4" required></textarea>
+          <label for="venueDescription">Venue Description</label>
+          <textarea id="venueDescription" name="venueDescription" rows="4" placeholder="Describe the venue..." required></textarea>
         </div>
+
+        <!-- Image Upload -->
         <div class="form-group">
-          <label for="venueImage">Upload Image</label>
+          <label for="venueImage">Upload Venue Image</label>
           <input type="file" id="venueImage" name="venueImage" accept="image/*" required />
         </div>
 
         <!-- Food Packages Section (Dynamic) -->
-        <fieldset style="border: none; margin-top: 2rem;">
-          <legend style="font-weight: 600; font-size: 1.1rem; color: #374151; margin-bottom: 1rem;">Food Packages</legend>
+        <fieldset class="food-packages-section">
+          <legend>Food Packages</legend>
 
           <div id="foodPackagesContainer">
-            <div class="food-package" style="border: 1px solid #e5e7eb; padding: 1rem; border-radius: 10px; margin-bottom: 1.5rem; background: #f9fafb;">
+            <div class="food-package">
               <div class="form-group">
                 <label for="packageName">Package Name</label>
-                <input type="text" name="packages[0][package_name]" required />
+                <input type="text" name="packages[0][package_name]" placeholder="Enter package name" required />
               </div>
               <div class="form-group">
                 <label for="originalPrice">Original Price (৳)</label>
-                <input type="number" name="packages[0][original_price]" required />
+                <input type="number" name="packages[0][original_price]" placeholder="Enter original price" required />
               </div>
               <div class="form-group">
-                <label for="promotionalPrice">Promotional Price (optional)</label>
-                <input type="number" name="packages[0][promotional_price]" />
+                <label for="promotionalPrice">Promotional Price</label>
+                <input type="number" name="packages[0][promotional_price]" placeholder="Enter promotional price (optional)" />
               </div>
               <div class="form-group">
                 <label for="items">Menu Items</label>
                 <textarea name="packages[0][items]" rows="4" placeholder="List items included in this package..." required></textarea>
               </div>
-              <div class="form-group" style="display: flex; align-items: center; gap: 10px;">
-                <input type="checkbox" name="packages[0][is_featured]" id="isFeatured0" />
-                <label for="isFeatured0" style="margin: 0;">Mark as Featured</label>
+              <div class="form-group">
+                <label for="isFeatured">Mark as Featured</label>
+                <input type="checkbox" name="packages[0][is_featured]" />
               </div>
             </div>
           </div>
 
           <button type="button" id="addPackageBtn" class="btn-add">+ Add Another Package</button>
         </fieldset>
+
+        <!-- Submit Button -->
         <button type="submit" class="btn-submit">Add Venue</button>
       </form>
     </div>

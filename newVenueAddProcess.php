@@ -22,16 +22,16 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
   // Move the uploaded image to the desired folder
   move_uploaded_file($_FILES['venueImage']['tmp_name'], "images/venues/" . $venueImage);
   // Insert the venue details
-  $stmt = $conn->prepare("INSERT INTO venues (name,password, type,HoldingNo, city, area, ZIP,Batch, capacity, image, description, status, ContactNumber, Email,space) VALUES (?,?,?,?,?, ?,?, ?, ?, ?, ?, 'active',?,?,?)");
-  $stmt->bind_param("sssissiiissis", $venueName, $password, $venueType, $venueholding, $venueCity, $venueArea, $venuezip, $venueBatch, $venueCapacity, $venueImage, $venueDescription, $venuecontact, $venueemail, $venuespace);
+  $stmt = $conn->prepare("INSERT INTO venues (name,password, type,HoldingNo, city, area, ZIP,Batch, capacity, image, description, status, ContactNumber, Email) VALUES (?,?,?,?,?, ?,?, ?, ?, ?, ?, 'active',?,?)");
+  $stmt->bind_param("sssissiiissis", $venueName, $password, $venueType, $venueholding, $venueCity, $venueArea, $venuezip, $venueBatch, $venueCapacity, $venueImage, $venueDescription, $venuecontact, $venueemail);
   $stmt->execute();
-  $venue_id = $conn->insert_id; // Get the last inserted venue ID
+  $venue_id = $conn->insert_id;
 
   // Handle time slot inserts
   if (isset($_POST['timeSlots'])) {
     foreach ($_POST['timeSlots'] as $slot) {
       if (!empty(trim($slot))) {
-        $stmt = $conn->prepare("INSERT INTO venue_slots (venue_id, time_slot) VALUES (?, ?)");
+        $stmt = $conn->prepare("INSERT INTO venue_slots (venue_id, slot_time) VALUES (?, ?)");
         $stmt->bind_param("is", $venue_id, $slot);
         $stmt->execute();
       }
@@ -64,5 +64,5 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
   }
 
   $conn->close(); // Close the connection
-  header("Location: admin_venues.php"); // Redirect to the venues page after insert
+  header("Location: login.php");
 }

@@ -34,6 +34,43 @@ $stmt->execute();
 $result_upcoming_events = $stmt->get_result()->fetch_assoc();
 $total_upcoming_events = $result_upcoming_events['total'] ?? 0;
 
+// Fetch the new booking details 
+$sql_new_booking = "SELECT b.id, c.name AS client_name, b.booking_date, b.timeslot, b.package_name, b.guests, b.status, b.newBookingCheck
+                    FROM bookings b 
+                    JOIN customers c ON b.customer_id = c.id
+                    WHERE b.venue_id = ? AND b.status = 'Active' AND b.newBookingCheck= 'No' ORDER BY b.created_at DESC LIMIT 1";
+$stmt = $conn->prepare($sql_new_booking);
+$stmt->bind_param('i', $venue_id);
+$stmt->execute();
+$result_new_booking = $stmt->get_result();
+$hasNewBooking = $result_new_booking->num_rows > 0;
+$newBookingData = $result_new_booking->fetch_assoc();
+$stmt->close();
+
+// Handle the Close button for the New Booking Modal
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && $_POST['action'] === 'close') {
+  // Fetch the booking ID from the POST data
+  $booking_id = $_POST['booking_id'] ?? null;
+
+  if ($booking_id) {
+    // Update the newBookingCheck column to 'Yes' for the corresponding booking
+    $stmt = $conn->prepare("UPDATE bookings SET newBookingCheck = 'Yes' WHERE id = ?");
+    $stmt->bind_param('i', $booking_id);
+    $stmt->execute();
+
+    if ($stmt->affected_rows > 0) {
+      // Success: Close the modal and give feedback
+      $message = "The booking notification has been acknowledged.";
+    } else {
+      // Failed to update
+      $message = "Failed to update the booking notification.";
+    }
+    $stmt->close();
+  }
+}
+
+
+
 // Fetch the pending cancellation requests
 $sql_cancellation_request = "SELECT b.id, c.name AS client_name, b.booking_date, b.timeslot, b.package_name, b.cancellationReason 
                             FROM bookings b 
@@ -53,6 +90,45 @@ $stmt->bind_param('i', $venue_id);
 $stmt->execute();
 $result_cancellations = $stmt->get_result()->fetch_assoc();
 $total_cancellations = $result_cancellations['total'] ?? 0;
+
+// Handle Approve/Reject Logic when the form is submitted
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+  $action = $_POST['action'] ?? '';
+  $booking_id = $_POST['booking_id'] ?? null;
+
+  if ($action && $booking_id) {
+    // Determine new status for cancellation
+    $newStatus = ($action === 'approve') ? 'Approved' : 'Rejected';
+    $newBookingStatus = ($action === 'approve') ? 'Cancelled' : 'Active';
+
+    // Fetch the current revenue for the booking (if approved, we need to calculate 70% of it)
+    $stmt = $conn->prepare("SELECT revenue FROM bookings WHERE id = ?");
+    $stmt->bind_param('i', $booking_id);
+    $stmt->execute();
+    $stmt->bind_result($currentRevenue);
+    $stmt->fetch();
+    $stmt->close();
+
+    // If the cancellation is approved, calculate 70% of the current revenue
+    if ($action === 'approve') {
+      $newRevenue = $currentRevenue * 0.7; // 70% of the current revenue
+    } else {
+      $newRevenue = $currentRevenue; // Keep the original revenue if rejected
+    }
+
+    // Update the booking's cancellation status, booking status, and revenue
+    $stmt = $conn->prepare("UPDATE bookings SET cancellationStatus = ?, status = ?, revenue = ? WHERE id = ?");
+    $stmt->bind_param('ssdi', $newStatus, $newBookingStatus, $newRevenue, $booking_id);
+    $stmt->execute();
+
+    if ($stmt->affected_rows > 0) {
+      $message = ($newStatus === 'Approved') ? 'You\'ve accepted the cancellation request.' : 'You\'ve rejected the cancellation request.';
+    } else {
+      $message = 'Failed to update cancellation request.';
+    }
+    $stmt->close();
+  }
+}
 
 // Timewise Reservations Query (for the current day)
 $sql_timewise_reservations = "SELECT booking_date, timeslot, b.id AS booking_id, c.name AS client_name, b.status, guests, package_name
@@ -107,7 +183,7 @@ $conn->close();
     </div>
     <ul class="sidebar-menu">
       <li class="active">
-        <a href="#">
+        <a href="venueDashboard.php">
           <i class="fas fa-tachometer-alt"></i>
           <span>Dashboard</span>
         </a>
@@ -119,9 +195,9 @@ $conn->close();
         </a>
       </li>
       <li>
-        <a href="#">
-          <i class="fas fa-clock"></i>
-          <span>Timewise Schedule</span>
+        <a href="venueEdit.php">
+          <i class="fas fa-edit"></i>
+          <span>Edit Venue</span>
         </a>
       </li>
       <li>
@@ -152,6 +228,32 @@ $conn->close();
         <h2>Welcome, <span id="venueName"><?php echo htmlspecialchars($venue_name); ?>!</span></h2>
       </div>
     </header>
+    <!-- Modal for New Booking Notification -->
+    <?php if ($hasNewBooking): ?>
+      <div id="newBookingModal" class="modal">
+        <div class="modal-content">
+          <div class="modal-header">
+            <i class="fas fa-check-circle" style="color: green; font-size: 2rem;"></i>
+            <h3>Congratulations! You got a new booking!</h3>
+          </div>
+          <div class="modal-body">
+            <p><strong>Client Name:</strong> <?= htmlspecialchars($newBookingData['client_name']) ?></p>
+            <p><strong>Booking Date:</strong> <?= htmlspecialchars($newBookingData['booking_date']) ?></p>
+            <p><strong>Time Slot:</strong> <?= htmlspecialchars($newBookingData['timeslot']) ?></p>
+            <p><strong>Package Name:</strong> <?= htmlspecialchars($newBookingData['package_name']) ?></p>
+            <p><strong>Guests:</strong> <?= htmlspecialchars($newBookingData['guests']) ?></p>
+          </div>
+          <!-- Form to handle the 'Close' button and update 'newBookingCheck' -->
+          <form method="POST" action="venueDashboard.php">
+            <input type="hidden" name="booking_id" value="<?= $newBookingData['id'] ?>">
+            <input type="hidden" name="action" value="close"> <!-- Added action hidden field -->
+            <button type="submit" class="modal-close">Close</button>
+          </form>
+        </div>
+      </div>
+    <?php endif; ?>
+
+
     <!-- Check for Pending Cancellation Request -->
     <?php if ($hasCancellationRequest): ?>
       <!-- Show Modal -->
@@ -165,8 +267,11 @@ $conn->close();
             <p><strong>Package Name:</strong> <?= htmlspecialchars($cancellationData['package_name']) ?></p>
             <p><strong>Cancellation Reason:</strong> <?= htmlspecialchars($cancellationData['cancellationReason']) ?></p>
           </div>
-          <button id="approveCancellation" data-booking-id="<?= $cancellationData['id'] ?>">Approve</button>
-          <button id="rejectCancellation" data-booking-id="<?= $cancellationData['id'] ?>" class="reject-btn">Reject</button>
+          <form method="POST" action="venueDashboard.php">
+            <input type="hidden" name="booking_id" value="<?= $cancellationData['id'] ?>">
+            <button type="submit" name="action" value="approve">Approve</button>
+            <button type="submit" name="action" value="reject" class="reject-btn">Reject</button>
+          </form>
         </div>
       </div>
     <?php endif; ?>
@@ -222,7 +327,6 @@ $conn->close();
             <th>Client Name</th>
             <th>Event Date</th>
             <th>Time Slot</th>
-
             <th>Guests</th>
             <th>Package Name</th>
             <th>Status</th>
@@ -231,16 +335,32 @@ $conn->close();
         <tbody>
           <?php foreach ($timewise_reservations as $reservation): ?>
             <tr>
-
               <td><?= htmlspecialchars($reservation['booking_id']) ?></td>
               <td><?= htmlspecialchars($reservation['client_name']) ?></td>
               <td><?= htmlspecialchars($reservation['booking_date']) ?></td>
               <td><?= htmlspecialchars($reservation['timeslot']) ?></td>
-
               <td><?= htmlspecialchars($reservation['guests']) ?></td>
               <td><?= htmlspecialchars($reservation['package_name']) ?></td>
-              <td><span class="status status-success"><?= htmlspecialchars($reservation['status']) ?></span></td>
+              <td>
+                <?php
+                // Set the status class dynamically
+                $statusClass = '';
+                switch ($reservation['status']) {
+                  case 'Active':
+                    $statusClass = 'status-pending';
+                    break;
+                  case 'Completed':
+                    $statusClass = 'status-success';
+                    break;
+                  case 'Cancelled':
+                    $statusClass = 'status-cancelled';
+                    break;
+                }
+                ?>
+                <span class="status <?= $statusClass ?>"><?= htmlspecialchars($reservation['status']) ?></span>
+              </td>
             </tr>
+
           <?php endforeach; ?>
         </tbody>
       </table>
@@ -277,6 +397,28 @@ $conn->close();
     });
   </script>
   <script>
+    // Show the modal if there's a new booking
+    function showNewBookingModal() {
+      const modal = document.getElementById('newBookingModal');
+      modal.style.display = 'flex';
+    }
+
+    // Close the modal
+    function closeNewBookingModal() {
+      const modal = document.getElementById('newBookingModal');
+      modal.style.display = 'none';
+    }
+
+    // Automatically show modal if there's a new booking
+    <?php if ($hasNewBooking): ?>
+      showNewBookingModal();
+    <?php endif; ?>
+
+    // Close button event listener
+    document.getElementById('closeNewBookingModal').addEventListener('click', closeNewBookingModal);
+  </script>
+
+  <script>
     // Show the modal if there's a cancellation request
     function showModal() {
       const modal = document.getElementById('cancellationModal');
@@ -293,45 +435,6 @@ $conn->close();
     <?php if ($hasCancellationRequest): ?>
       showModal();
     <?php endif; ?>
-    // Approve the cancellation
-    $('#approveCancellation').click(function() {
-      const bookingId = $(this).data('booking-id');
-      $.ajax({
-        url: 'handleCancellationRequest.php',
-        type: 'POST',
-        data: {
-          booking_id: bookingId,
-          action: 'approve'
-        },
-        success: function(response) {
-          alert(response.message);
-          closeModal();
-        },
-        error: function() {
-          alert('Error occurred while approving the cancellation.');
-        }
-      });
-    });
-
-    // Reject the cancellation
-    $('#rejectCancellation').click(function() {
-      const bookingId = $(this).data('booking-id');
-      $.ajax({
-        url: 'handleCancellationRequest.php',
-        type: 'POST',
-        data: {
-          booking_id: bookingId,
-          action: 'reject'
-        },
-        success: function(response) {
-          alert(response.message);
-          closeModal();
-        },
-        error: function() {
-          alert('Error occurred while rejecting the cancellation.');
-        }
-      });
-    });
   </script>
 </body>
 

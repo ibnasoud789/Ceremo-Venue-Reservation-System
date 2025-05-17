@@ -137,7 +137,7 @@ $currentUrl = $_SERVER['REQUEST_URI'];
     <li><a href="venues.php" class="<?= $current === 'venues.php'  ? 'active' : '' ?>">Venues</a></li>
     <li><a href="bookNow.php" class="<?= $current === 'bookNow.php' ? 'active' : '' ?>">Book Now</a></li>
     <li><a href="addOns.php" class="<?= $current === 'addOns.php'  ? 'active' : '' ?>">Services</a></li>
-    <li><a href="contact.php" class="<?= $current === 'contact.php' ? 'active' : '' ?>">Contact</a></li>
+    <li><a href="#contact" class="<?= $current === 'contact.php' ? 'active' : '' ?>">Contact</a></li>
 
     <?php if (! $isLoggedIn): ?>
       <li>

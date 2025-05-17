@@ -38,12 +38,12 @@ while ($f = $fres->fetch_assoc()) {
 
 // Fetch slots
 $slots = [];
-$sstmt = $conn->prepare("SELECT slot_time FROM venue_slots WHERE venue_id = ?");
+$sstmt = $conn->prepare("SELECT time_slot FROM venue_slots WHERE venue_id = ?");
 $sstmt->bind_param("i", $venue_id);
 $sstmt->execute();
 $sres = $sstmt->get_result();
 while ($slot = $sres->fetch_assoc()) {
-  $slots[] = $slot['slot_time'];
+  $slots[] = $slot['time_slot'];
 }
 
 // Fetch food packages
@@ -67,15 +67,6 @@ while ($g = $gres->fetch_assoc()) {
   $gallery[] = $g['image_url'];
 }
 
-// Fetch reviews
-$reviews = [];
-$rstmt = $conn->prepare("SELECT customer_name, comment FROM reviews WHERE venue_id = ?");
-$rstmt->bind_param("i", $venue_id);
-$rstmt->execute();
-$rres = $rstmt->get_result();
-while ($r = $rres->fetch_assoc()) {
-  $reviews[] = $r;
-}
 
 $conn->close();
 ?>
@@ -258,15 +249,7 @@ $conn->close();
     </div>
   </section>
 
-  <section class="venue-reviews animate__animated animate__fadeInUp">
-    <h2>Customer Reviews</h2>
-    <?php foreach ($reviews as $r): ?>
-      <div class="review">
-        <p>"<?= htmlspecialchars($r['comment']) ?>"</p>
-        <span>- <?= htmlspecialchars($r['customer_name']) ?></span>
-      </div>
-    <?php endforeach; ?>
-  </section>
+
   <section class="venue-contact-address animate__animated animate__fadeInUp">
     <div class="section-wrapper">
       <!-- Address Section -->

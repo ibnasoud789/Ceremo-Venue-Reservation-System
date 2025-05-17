@@ -54,9 +54,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['confirm_booking']) &&
   $package_name = $data['package_name'];
   $status = "Active";
   $revenue = $guests * 30;
+  $newBookingCheck = 'No';
 
-  $stmt = $conn->prepare("INSERT INTO bookings (venue_id, customer_id, booking_date, timeslot, guests, package_name, status, revenue) VALUES (?, ?, ?, ?, ?, ?, ?, ?)");
-  $stmt->bind_param("iisssssi", $venue_id, $customer_id, $bookingDate, $timeSlot, $guests, $package_name, $status, $revenue);
+  $stmt = $conn->prepare("INSERT INTO bookings (venue_id, customer_id, booking_date, timeslot, guests, package_name, status, revenue, newBookingCheck) VALUES (?, ?, ?, ?, ?, ?, ?, ?,?)");
+  $stmt->bind_param("iisssssis", $venue_id, $customer_id, $bookingDate, $timeSlot, $guests, $package_name, $status, $revenue, $newBookingCheck);
   $stmt->execute();
 
   $success = true;

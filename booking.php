@@ -47,7 +47,7 @@ foreach ($add_on_categories as $cat) {
 // Fetch time slots
 $slots = [];
 if ($venue_id && $bookingDate) {
-  $stmt = $conn->prepare("SELECT vs.slot_time, CASE WHEN EXISTS (SELECT 1 FROM bookings b WHERE b.venue_id = vs.venue_id AND b.booking_date = ? AND b.timeslot = vs.slot_time) THEN 0 ELSE 1 END AS is_available FROM venue_slots vs WHERE vs.venue_id = ?");
+  $stmt = $conn->prepare("SELECT vs.time_slot, CASE WHEN EXISTS (SELECT 1 FROM bookings b WHERE b.venue_id = vs.venue_id AND b.booking_date = ? AND b.timeslot = vs.time_slot) THEN 0 ELSE 1 END AS is_available FROM venue_slots vs WHERE vs.venue_id = ?");
   $stmt->bind_param("si", $bookingDate, $venue_id);
   $stmt->execute();
   $slots = $stmt->get_result()->fetch_all(MYSQLI_ASSOC);
@@ -186,11 +186,11 @@ $conn->close();
               <tbody>
                 <?php foreach ($slots as $slot): ?>
                   <tr>
-                    <td><?= $slot['slot_time'] ?></td>
+                    <td><?= $slot['time_slot'] ?></td>
                     <td>
                       <?php if ($slot['is_available']): ?>
                         <label style="display: inline-flex; align-items: center; gap: 5px;" class="unavailable">
-                          <input type="radio" name="timeSlot" value="<?= $slot['slot_time'] ?>" required>
+                          <input type="radio" name="timeSlot" value="<?= $slot['time_slot'] ?>" required>
                           Available
                         </label>
                       <?php else: ?>
